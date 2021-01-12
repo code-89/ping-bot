@@ -39,7 +39,7 @@ def request_ping_small_p(message):
     request = message.text.split(' ')
     if len(request) <= 1:
         bot.send_message(message.chat.id, 'Некорректный запрос\n'
-                                          'Пример запроса: /P google.com\n'
+                                          'Пример запроса: /p google.com\n'
                                           'После адреса можно указать '
                                           'количество отправляемых запросов, '
                                           'от 1 до 20 включительно. '
