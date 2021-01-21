@@ -61,4 +61,4 @@ def send_text(message):
                                           '" отсутствует в базе! \u274c')
 
 
-bot.polling(none_stop=True)
+bot.infinity_polling(True)

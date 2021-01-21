@@ -39,7 +39,10 @@ def response_parse(response, numbers_list, hostname):
     time_response = []
     for i in numbers_list:
         received_time = ''
-        time = response.split('=')[i]
+        try:
+            time = response.split('=')[i]
+        except IndexError:
+            return '<Error: 1> ' + hostname + '\n<превышен интервал ожидания>'
         for char in time:
             try:
                 num = int(char)
@@ -52,6 +55,9 @@ def response_parse(response, numbers_list, hostname):
 
 def result(time_response, request_count, hostname):
     result = ''
-    for i in range(request_count):
-        result += 'Время ответа = ' + str(time_response[i]) + ' ms \n'
+    try:
+        for i in range(request_count):
+            result += 'Время ответа = ' + str(time_response[i]) + ' ms \n'
+    except IndexError:
+        return '<Error: 2> ' + hostname + '\n<невозможно вывести результат>'
     return 'Адрес ' + hostname + ' доступен! \u2705 \n' + result
