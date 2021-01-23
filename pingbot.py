@@ -1,8 +1,10 @@
+import time
+import logging
 import telebot
+from database import substation_db
 from tokenfile import token
 from windows import processing_request
 from windows import ping
-from database import substation_db
 
 bot = telebot.TeleBot(token)
 
@@ -61,4 +63,13 @@ def send_text(message):
                                           '" отсутствует в базе! \u274c')
 
 
-bot.infinity_polling(True)
+logging.basicConfig(filename='error.log',
+                    format='%(asctime)s %(levelname)s:%(message)s')
+logger = logging.getLogger(__name__)
+
+while True:
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        logger.error(e)
+        time.sleep(15)
