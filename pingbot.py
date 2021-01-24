@@ -1,45 +1,30 @@
-import time
 import logging
 import telebot
+import time
 from database import substation_db
 from tokenfile import token
-from windows import processing_request
-from windows import ping
+from windows import processing_request, ping
 
 bot = telebot.TeleBot(token)
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'Start'])
 def start_message(message):
     bot.send_message(message.chat.id, 'Вас приветствует Пинг-бот.\n'
                                       'Функционал доступен по команде /help')
 
 
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['help', 'Help'])
 def help_message(message):
     bot.send_message(message.chat.id, 'Доступные команды:\n'
                                       '/start - приветствие\n'
                                       '/help - помощь\n'
-                                      '/P или /p - пинг любого адреса\n'
+                                      '/p - пинг любого адреса\n'
                                       'Так же можно просто отправить '
                                       'номер подстанции, например: 405')
 
 
-@bot.message_handler(commands=['P'])
-def request_ping_big_p(message):
-    request = message.text.split(' ')
-    if len(request) <= 1:
-        bot.send_message(message.chat.id, 'Некорректный запрос\n'
-                                          'Пример: /P google.com\n'
-                                          'После адреса можно указать '
-                                          'количество отправляемых запросов, '
-                                          'от 1 до 20 включительно. '
-                                          'По умолчанию количество = 4')
-    else:
-        bot.send_message(message.chat.id, processing_request(request))
-
-
-@bot.message_handler(commands=['p'])
+@bot.message_handler(commands=['p', 'P'])
 def request_ping_small_p(message):
     request = message.text.split(' ')
     if len(request) <= 1:
@@ -55,7 +40,11 @@ def request_ping_small_p(message):
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
-    if str(message.text) in substation_db:
+    if '/' in message.text:
+        bot.send_message(message.chat.id, '<Неизвестная команда>\n'
+                                          'Для вызова списка доступных команд '
+                                          'отправьте /help')
+    elif str(message.text) in substation_db:
         bot.send_message(message.chat.id,
                          ping(substation_db[str(message.text)]))
     else:
