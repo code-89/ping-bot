@@ -68,12 +68,12 @@ def other_type(message):
 
 
 logging.basicConfig(filename='error.log',
-                    format='%(asctime)s %(levelname)s:%(message)s')
+                    format='%(asctime)s - %(levelname)s: %(name)s')
 logger = logging.getLogger(__name__)
 
 while True:
     try:
         bot.polling(none_stop=True)
     except Exception as e:
-        logger.error(e)
+        logger.error(type(e).__name__)
         time.sleep(15)
