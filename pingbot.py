@@ -1,11 +1,10 @@
-import logging
 import telebot
 import time
 from database import substation_db
-from tokenfile import token
+from tokenfile import TOKEN
 from windows import processing_request, ping
 
-bot = telebot.TeleBot(token)
+bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(commands=['start', 'Start'])
@@ -67,13 +66,15 @@ def other_type(message):
                                       'Для помощи отправьте /help')
 
 
-logging.basicConfig(filename='error.log',
-                    format='%(asctime)s - %(levelname)s: %(name)s')
-logger = logging.getLogger(__name__)
+def logger(exception_type):
+    with open('error.log', 'a') as logfile:
+        error_time = time.strftime('%Y-%m-%d %H:%M:%S ', time.localtime())
+        logfile.write(error_time + exception_type + '\n')
+
 
 while True:
     try:
         bot.polling(none_stop=True)
     except Exception as e:
-        logger.error(type(e).__name__)
+        logger(str(type(e).__name__))
         time.sleep(15)
