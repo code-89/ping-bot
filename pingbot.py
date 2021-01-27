@@ -1,6 +1,6 @@
 import telebot
 import time
-from database import substation_db
+from database import SUBSTATION_DB
 from tokenfile import TOKEN
 from windows import processing_request, ping
 
@@ -43,9 +43,9 @@ def send_text(message):
         bot.send_message(message.chat.id, '<Неизвестная команда>\n'
                                           'Для вызова списка доступных команд '
                                           'отправьте /help')
-    elif str(message.text) in substation_db:
+    elif str(message.text) in SUBSTATION_DB:
         bot.send_message(message.chat.id,
-                         ping(substation_db[str(message.text)]))
+                         ping(SUBSTATION_DB[str(message.text)]))
     else:
         bot.send_message(message.chat.id, 'Подстанция "' + str(message.text) +
                                           '" отсутствует в базе! \u274c')
@@ -76,5 +76,5 @@ while True:
     try:
         bot.polling(none_stop=True)
     except Exception as e:
-        logger(str(type(e).__name__))
+        logger(type(e).__name__)
         time.sleep(15)
