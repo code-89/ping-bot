@@ -49,7 +49,7 @@ def response_parse(response, numbers_list, hostname):
                 received_time += char
             except ValueError:
                 continue
-        time_response.append(int(received_time))
+        time_response.append(received_time)
     return result(time_response, len(numbers_list), hostname)
 
 
@@ -57,7 +57,7 @@ def result(time_response, request_count, hostname):
     result = ''
     try:
         for i in range(request_count):
-            result += 'Время ответа = ' + str(time_response[i]) + ' ms \n'
+            result += 'Время ответа = ' + time_response[i] + ' ms \n'
     except IndexError:
         return '<Error: 2> ' + hostname + '\n<невозможно вывести результат>'
     return 'Адрес ' + hostname + ' доступен! \u2705 \n' + result
