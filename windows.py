@@ -23,7 +23,7 @@ def ping(hostname, request_count=4):
                 'Время ответа < 1 ms')
     elif 'TTL=' in response:
         return response_parse(response, numbers_for_parse(request_count),
-                                hostname)
+                              hostname)
     else:
         return 'Адрес ' + hostname + ' не доступен :( \u26d4\ufe0f'
 
@@ -44,10 +44,9 @@ def response_parse(response, numbers_list, hostname):
         except IndexError:
             return '<Error: 1> ' + hostname + '\n<превышен интервал ожидания>'
         for char in time:
-            try:
-                num = int(char)
+            if char.isdecimal():
                 received_time += char
-            except ValueError:
+            else:
                 continue
         time_response.append(received_time)
     return result(time_response, len(numbers_list), hostname)
