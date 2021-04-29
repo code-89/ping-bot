@@ -1,11 +1,15 @@
+import os
 import telebot
 import time
 
+from dotenv import load_dotenv
+
 from database import SUBSTATION_DB
-from tokenfile import TOKEN
 from windows import processing_request, ping
 
-bot = telebot.TeleBot(TOKEN)
+load_dotenv()
+token = os.getenv('TOKEN')
+bot = telebot.TeleBot(token)
 
 
 @bot.message_handler(commands=['start', 'Start'])
