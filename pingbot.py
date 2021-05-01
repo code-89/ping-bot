@@ -5,7 +5,7 @@ import time
 from dotenv import load_dotenv
 
 from database import SUBSTATION_DB
-from windows import processing_request, ping
+from windows import processing_request, text_request
 
 load_dotenv()
 token = os.getenv('TOKEN')
@@ -44,13 +44,13 @@ def request_ping_small_p(message):
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
+    request = str(message.text).split(' ')
     if '/' in message.text:
         bot.send_message(message.chat.id, '<Неизвестная команда>\n'
                                           'Для вызова списка доступных команд '
                                           'отправьте /help')
-    elif str(message.text) in SUBSTATION_DB:
-        bot.send_message(message.chat.id,
-                         ping(SUBSTATION_DB[str(message.text)]))
+    elif request[0] in SUBSTATION_DB:
+        bot.send_message(message.chat.id, text_request(request))
     else:
         bot.send_message(message.chat.id, 'Подстанция "' + str(message.text) +
                                           '" отсутствует в базе! \u274c')

@@ -1,5 +1,21 @@
 import os
 
+from database import SUBSTATION_DB
+
+
+def text_request(request):
+    if len(request) > 1:
+        try:
+            ip_address = SUBSTATION_DB[request[0]]
+            request_count = int(request[1])
+            if 1 <= request_count <= 20:
+                return ping(ip_address, request_count)
+            else:
+                return ping(ip_address)
+        except Exception:
+            return ping(SUBSTATION_DB[request[0]])
+    return ping(SUBSTATION_DB[request[0]])
+
 
 def processing_request(request):
     if len(request) >= 3:
