@@ -29,7 +29,7 @@ def help_message(message):
 
 
 @bot.message_handler(commands=['p', 'P'])
-def request_ping_small_p(message):
+def request_command(message):
     request = message.text.split(' ')
     if len(request) <= 1:
         bot.send_message(message.chat.id, 'Некорректный запрос\n'
@@ -39,21 +39,36 @@ def request_ping_small_p(message):
                                           'от 1 до 20 включительно. '
                                           'По умолчанию количество = 4')
     else:
-        bot.send_message(message.chat.id, processing_request(request))
+        repeat_button = telebot.types.ReplyKeyboardMarkup(
+            one_time_keyboard=True, resize_keyboard=True
+        )
+        repeat_button.add(message.text)
+        bot.send_message(message.chat.id, processing_request(request),
+                         reply_markup=repeat_button)
 
 
 @bot.message_handler(content_types=['text'])
-def send_text(message):
+def request_text(message):
     request = str(message.text).split(' ')
     if '/' in message.text:
         bot.send_message(message.chat.id, '<Неизвестная команда>\n'
                                           'Для вызова списка доступных команд '
                                           'отправьте /help')
     elif request[0] in SUBSTATION_DB:
-        bot.send_message(message.chat.id, text_request(request))
+        repeat_button = telebot.types.ReplyKeyboardMarkup(
+            one_time_keyboard=True, resize_keyboard=True
+        )
+        repeat_button.add(message.text)
+        bot.send_message(message.chat.id, text_request(request),
+                         reply_markup=repeat_button)
     else:
+        repeat_button = telebot.types.ReplyKeyboardMarkup(
+            one_time_keyboard=True, resize_keyboard=True
+        )
+        repeat_button.add(message.text)
         bot.send_message(message.chat.id, 'Подстанция "' + str(message.text) +
-                                          '" отсутствует в базе! \u274c')
+                                          '" отсутствует в базе! \u274c',
+                         reply_markup=repeat_button)
 
 
 @bot.message_handler(content_types=['audio', 'document', 'photo', 'sticker',
