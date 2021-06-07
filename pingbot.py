@@ -28,6 +28,13 @@ def help_message(message):
                                       'номер подстанции, например: 405')
 
 
+def repeat(message):
+    repeat_button = telebot.types.ReplyKeyboardMarkup(
+        one_time_keyboard=True, resize_keyboard=True
+    )
+    return repeat_button.add(message.text)
+
+
 @bot.message_handler(commands=['p', 'P'])
 def request_command(message):
     request = message.text.split(' ')
@@ -39,12 +46,8 @@ def request_command(message):
                                           'от 1 до 20 включительно. '
                                           'По умолчанию количество = 4')
     else:
-        repeat_button = telebot.types.ReplyKeyboardMarkup(
-            one_time_keyboard=True, resize_keyboard=True
-        )
-        repeat_button.add(message.text)
         bot.send_message(message.chat.id, processing_request(request),
-                         reply_markup=repeat_button)
+                         reply_markup=repeat(message))
 
 
 @bot.message_handler(content_types=['text'])
@@ -55,20 +58,12 @@ def request_text(message):
                                           'Для вызова списка доступных команд '
                                           'отправьте /help')
     elif request[0] in SUBSTATION_DB:
-        repeat_button = telebot.types.ReplyKeyboardMarkup(
-            one_time_keyboard=True, resize_keyboard=True
-        )
-        repeat_button.add(message.text)
         bot.send_message(message.chat.id, text_request(request),
-                         reply_markup=repeat_button)
+                         reply_markup=repeat(message))
     else:
-        repeat_button = telebot.types.ReplyKeyboardMarkup(
-            one_time_keyboard=True, resize_keyboard=True
-        )
-        repeat_button.add(message.text)
         bot.send_message(message.chat.id, 'Подстанция "' + str(message.text) +
                                           '" отсутствует в базе! \u274c',
-                         reply_markup=repeat_button)
+                         reply_markup=repeat(message))
 
 
 @bot.message_handler(content_types=['audio', 'document', 'photo', 'sticker',
