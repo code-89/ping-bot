@@ -53,7 +53,7 @@ def request_command(message):
 @bot.message_handler(content_types=['text'])
 def request_text(message):
     request = str(message.text).split(' ')
-    if '/' in message.text:
+    if message.text[0] == '/':
         bot.send_message(message.chat.id, '<Неизвестная команда>\n'
                                           'Для вызова списка доступных команд '
                                           'отправьте /help')
@@ -62,8 +62,7 @@ def request_text(message):
                          reply_markup=repeat(message))
     else:
         bot.send_message(message.chat.id, 'Подстанция "' + str(message.text) +
-                                          '" отсутствует в базе! \u274c',
-                         reply_markup=repeat(message))
+                                          '" отсутствует в базе! \u274c')
 
 
 @bot.message_handler(content_types=['audio', 'document', 'photo', 'sticker',
